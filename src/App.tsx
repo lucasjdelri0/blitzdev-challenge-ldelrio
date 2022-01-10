@@ -1,26 +1,32 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { Button, Typography, Space } from "antd";
+import Page from "./components/Page";
+import TitleWrapper from "./components/TitleWrapper";
+import ContentWrapper from "./components/ContentWrapper";
+import "./App.css";
 
-function App() {
+const { Title, Text } = Typography;
+
+const App = () => {
+  const onClick = () => console.log("Clicked");
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Page>
+      <TitleWrapper>
+        <Title level={2}>BlitzDev Challenge</Title>
+      </TitleWrapper>
+      <ContentWrapper>
+        <Space direction="vertical" align="center" size="middle">
+          <Text>
+            React website based on Ant Design for solving BlitzDev Challenge
+          </Text>
+          <Button type="primary" onClick={onClick}>
+            Try Me
+          </Button>
+        </Space>
+      </ContentWrapper>
+    </Page>
   );
-}
+};
 
 export default App;
