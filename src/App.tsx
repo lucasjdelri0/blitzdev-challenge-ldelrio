@@ -7,7 +7,8 @@ import {
   Avatar,
   List,
   Skeleton,
-  Card,
+  Image,
+  message,
 } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 import { ethers, Contract, BigNumber } from "ethers";
@@ -15,28 +16,23 @@ import Page from "./components/Page";
 import TitleWrapper from "./components/TitleWrapper";
 import ContentWrapper from "./components/ContentWrapper";
 import InputSearch from "./components/InputSearch";
+import LoadableCard from "./components/LoadableCard";
 import { minABI } from "./utils";
 import { IOwnerToken, IContractInfo } from "./types";
 import "./App.css";
 
 const { Title, Text, Link } = Typography;
-const { Meta } = Card;
 
 const App = () => {
   const [fetching, setFetching] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [accountAddress, setAccountAddress] = useState();
+  const [accountAddress, setAccountAddress] = useState("");
   const [web3Provider, setWeb3Provider] = useState<
     ethers.providers.Web3Provider | undefined
   >();
   const [contractInfo, setContractInfo] = useState<IContractInfo | undefined>();
   const [myTokens, setMyTokens] = useState<IOwnerToken[] | undefined>([]);
-
-  const contractAddressLIMO = "0x0d464bdde2301c30871bb4c29bb7dd935f5a985c";
-  const randomOwnerFromLIMO = "0x631e8b45bD1a8eD4564D40A80DF72d93fF5f11bd";
-
-  const contractAddressAPES = "0x6afc012783e3a6ef8c5f05f8eee2edef6a052ec4";
-  const randomOwnerFromAPES = "0x23aE81B92262B96e6fDe50B6616651Aa1e2ddD60";
+  const [error, setError] = useState();
 
   const toNumber = (num: BigNumber): number => {
     const bigNumber = BigNumber.from(num);
@@ -44,11 +40,11 @@ const App = () => {
   };
 
   const getContractInfo = async (searchText: string) => {
-    // contract object instance with which we'll be able to interact with our smart contract in the blockchain. (smart contract address, abi, signer)
     if (!web3Provider) {
       return;
     }
 
+    setContractInfo(undefined);
     setFetching(true);
 
     try {
@@ -60,9 +56,7 @@ const App = () => {
       const symbol = await nftContract.symbol();
       const totalSupplyBN = await nftContract.totalSupply();
       const totalSupply = toNumber(totalSupplyBN._hex);
-      // const balanceBN = await nftContract.balanceOf(accountAddress);
-      const balanceBN = await nftContract.balanceOf(randomOwnerFromAPES);
-      // const balanceBN = await nftContract.balanceOf(randomOwnerFromLIMO);
+      const balanceBN = await nftContract.balanceOf(accountAddress);
       const balance = toNumber(balanceBN._hex);
 
       const data: IContractInfo = {
@@ -77,9 +71,7 @@ const App = () => {
       let ownerTokens = [];
       for (let i = 0; i < balance; i++) {
         const tokenId = await nftContract.tokenOfOwnerByIndex(
-          // accountAddress,
-          // randomOwnerFromLIMO,
-          randomOwnerFromAPES,
+          accountAddress,
           BigNumber.from(i)
         );
         const tokenURI = await nftContract.tokenURI(tokenId);
@@ -96,14 +88,14 @@ const App = () => {
           const { name, external_url, image, tokenId } = await result.json();
           const tokenInfo: IOwnerToken = { name, external_url, image, tokenId };
           ownerTokens.push(tokenInfo);
-        } catch (e) {
-          console.log(e);
-          // Set onError and display toast
+        } catch {
+          message.error("Error while fetching token metadata");
         }
       }
       setMyTokens(ownerTokens);
       setFetching(false);
     } catch (e) {
+      message.error("Error reading contract data");
       setFetching(false);
     }
   };
@@ -150,8 +142,8 @@ const App = () => {
       });
       console.log("Found an account! Address: ", accounts[0]);
       setAccountAddress(accounts[0]);
-    } catch (err) {
-      console.log(err);
+    } catch {
+      message.error("Error connecting wallet");
     }
   };
 
@@ -161,7 +153,7 @@ const App = () => {
       align="center"
       style={{ marginBottom: 24, overflowWrap: "anywhere" }}
     >
-      <Title level={4}>We need to connect your wallet to continue</Title>
+      <Title level={4}>You'll need to connect your wallet to continue</Title>
       <Button type="primary" onClick={connectWalletHandler}>
         Connect Wallet
       </Button>
@@ -176,26 +168,28 @@ const App = () => {
         placeholder="Search collections by contract address"
         onSearch={getContractInfo}
       />
-      {contractInfo && (
+      {!contractInfo ? (
+        fetching ? (
+          <Skeleton active />
+        ) : null
+      ) : (
         <Space
           direction="vertical"
           align="center"
           style={{ marginBottom: 24, overflowWrap: "anywhere" }}
         >
-          <Skeleton loading={fetching} active>
-            <Avatar size={64}>{contractInfo.symbol}</Avatar>
-            <Title level={4}>
-              {contractInfo.name} {`(${contractInfo.symbol})`}
-            </Title>
+          <Avatar size={64}>{contractInfo.symbol}</Avatar>
+          <Title level={4}>
+            {contractInfo.name} {`(${contractInfo.symbol})`}
+          </Title>
 
-            <Link
-              href={`https://bscscan.com/address/${contractInfo.address}`}
-              target="_blank"
-              copyable
-            >
-              {contractInfo.address}
-            </Link>
-          </Skeleton>
+          <Link
+            href={`https://bscscan.com/address/${contractInfo.address}`}
+            target="_blank"
+            copyable
+          >
+            {contractInfo.address}
+          </Link>
         </Space>
       )}
       <List
@@ -203,20 +197,16 @@ const App = () => {
         grid={{ gutter: 20, column: 4 }}
         renderItem={({ name, image, tokenId }: IOwnerToken, index: number) => (
           <List.Item key={index}>
-            <Skeleton loading={fetching} active>
-              <Link
-                href={`https://liquidcollectibles.io/collection/${contractInfo?.address}/token/${tokenId}`}
-                target="_blank"
-              >
-                <Card
-                  hoverable
-                  cover={<img alt={name} src={image} />}
-                  size="small"
-                >
-                  <Meta title={<Text strong>{name}</Text>} />
-                </Card>
-              </Link>
-            </Skeleton>
+            <LoadableCard
+              active
+              loading={fetching}
+              href={`https://liquidcollectibles.io/collection/${contractInfo?.address}/token/${tokenId}`}
+              target="_blank"
+              hoverable
+              cover={<Image alt={name} src={image} preview={false} />}
+              size="small"
+              title={<Text strong>{name}</Text>}
+            />
           </List.Item>
         )}
       />
