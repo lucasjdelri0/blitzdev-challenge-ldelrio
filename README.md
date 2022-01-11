@@ -26,7 +26,7 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 
 ### `yarn storybook`
 
-Launches Storybook project for exploring application components.
+Launches Storybook project for exploring application components.\
 Make sure you have built your project before launchig this script.
 
 ## Learn More
