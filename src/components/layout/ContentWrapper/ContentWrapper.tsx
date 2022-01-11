@@ -1,7 +1,7 @@
-import { ReactNode } from "react";
+import { ContentWrapperProps } from "./ContentWrapper.props";
 import { Row, Col } from "antd";
 
-const ContentWrapper = ({ children }: { children: ReactNode }): JSX.Element => (
+export const ContentWrapper = (props: ContentWrapperProps): JSX.Element => (
   <Row style={{ justifyContent: "center" }}>
     <Col
       xl={{ span: 16 }}
@@ -10,9 +10,7 @@ const ContentWrapper = ({ children }: { children: ReactNode }): JSX.Element => (
       sm={{ span: 22 }}
       xs={{ span: 22 }}
     >
-      {children}
+      {props.children}
     </Col>
   </Row>
 );
-
-export default ContentWrapper;

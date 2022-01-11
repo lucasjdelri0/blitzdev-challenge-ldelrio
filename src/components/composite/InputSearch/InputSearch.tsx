@@ -1,23 +1,16 @@
 import { Form, Input as AntInput } from "antd";
+import { InputSearchProps } from "./InputSearch.props";
 
 const { Search } = AntInput;
 
-const InputSearch = ({
-  loading = false,
-  placeholder,
-  onSearch,
-}: {
-  loading: boolean;
-  placeholder?: string;
-  onSearch: (val: string) => void;
-}): JSX.Element => {
+export const InputSearch = (props: InputSearchProps): JSX.Element => {
   const [form] = Form.useForm();
   const fieldName = "inputSearch";
   const initialValue = "";
 
   const onTextSearch = (frmValues: { [key: string]: string }) => {
     const { inputSearch } = frmValues;
-    onSearch(inputSearch);
+    props.onSearch(inputSearch);
   };
 
   return (
@@ -30,13 +23,11 @@ const InputSearch = ({
         <Search
           allowClear
           enterButton
-          loading={loading}
+          loading={props.loading}
           onSearch={() => form.submit()}
-          placeholder={placeholder}
+          placeholder={props.placeholder}
         />
       </Form.Item>
     </Form>
   );
 };
-
-export default InputSearch;
