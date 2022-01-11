@@ -12,11 +12,11 @@ import {
 } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 import { ethers, Contract, BigNumber } from "ethers";
-import Page from "./components/Page";
-import TitleWrapper from "./components/TitleWrapper";
-import ContentWrapper from "./components/ContentWrapper";
-import InputSearch from "./components/InputSearch";
-import LoadableCard from "./components/LoadableCard";
+import Page from "./components/layout/Page";
+import TitleWrapper from "./components/layout/TitleWrapper";
+import ContentWrapper from "./components/layout/ContentWrapper";
+import InputSearch from "./components/composite/InputSearch";
+import LoadableCard from "./components/composite/LoadableCard";
 import { minABI } from "./utils";
 import { IOwnerToken, IContractInfo } from "./types";
 import "./App.css";
@@ -162,7 +162,7 @@ const App = () => {
 
   const Explore = () => (
     <>
-      <Title level={4}>Type some collection address</Title>
+      <Title level={4}>Type some contract address to see the magic</Title>
       <InputSearch
         loading={fetching}
         placeholder="Search collections by contract address"
