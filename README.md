@@ -29,6 +29,8 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 Launches Storybook project for exploring application components.\
 Make sure you have built your project before launchig this script.
 
+Open [http://localhost:6006](http://localhost:6006) to view it in the browser.
+
 ## Learn More
 
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
