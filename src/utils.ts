@@ -1,5 +1,4 @@
 export let minABI = [
-  // name
   {
     constant: true,
     inputs: [],
@@ -7,7 +6,6 @@ export let minABI = [
     outputs: [{ name: "", type: "string" }],
     type: "function",
   },
-  // symbol
   {
     constant: true,
     inputs: [],
@@ -15,7 +13,6 @@ export let minABI = [
     outputs: [{ name: "", type: "string" }],
     type: "function",
   },
-  // totalSupply
   {
     constant: true,
     inputs: [],
@@ -23,7 +20,6 @@ export let minABI = [
     outputs: [{ name: "", type: "uint256" }],
     type: "function",
   },
-  // balanceOf
   {
     constant: true,
     inputs: [{ name: "_owner", type: "address" }],
@@ -31,7 +27,6 @@ export let minABI = [
     outputs: [{ name: "balance", type: "uint256" }],
     type: "function",
   },
-  // tokenOfOwnerByIndex
   {
     constant: true,
     inputs: [
@@ -42,7 +37,6 @@ export let minABI = [
     outputs: [{ name: "id", type: "uint256" }],
     type: "function",
   },
-  // tokenURI
   {
     constant: true,
     inputs: [{ name: "_tokenId", type: "uint256" }],

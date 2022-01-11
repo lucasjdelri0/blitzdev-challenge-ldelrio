@@ -32,7 +32,6 @@ const App = () => {
   >();
   const [contractInfo, setContractInfo] = useState<IContractInfo | undefined>();
   const [myTokens, setMyTokens] = useState<IOwnerToken[] | undefined>([]);
-  const [error, setError] = useState();
 
   const toNumber = (num: BigNumber): number => {
     const bigNumber = BigNumber.from(num);
@@ -105,11 +104,10 @@ const App = () => {
       const { ethereum } = window as any;
 
       if (!ethereum) {
-        console.log("Make sure you have Metamask installed!");
+        message.info("Make sure you have Metamask installed!");
         return;
       }
 
-      console.log("Wallet exists! We're ready to go!");
       const provider = new ethers.providers.Web3Provider(ethereum);
       setWeb3Provider(provider);
 
@@ -119,10 +117,9 @@ const App = () => {
 
       if (accounts.length !== 0) {
         const account = accounts[0];
-        console.log("Found an authorized account: ", account);
         setAccountAddress(account);
       } else {
-        console.log("No authorized account found");
+        message.error("No authorized account found");
       }
     };
 
@@ -140,7 +137,6 @@ const App = () => {
       const accounts = await ethereum.request({
         method: "eth_requestAccounts",
       });
-      console.log("Found an account! Address: ", accounts[0]);
       setAccountAddress(accounts[0]);
     } catch {
       message.error("Error connecting wallet");

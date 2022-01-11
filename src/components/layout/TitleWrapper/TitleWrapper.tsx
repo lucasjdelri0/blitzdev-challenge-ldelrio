@@ -1,4 +1,3 @@
-import { ReactNode } from "react";
 import { TitleWrapperProps } from "./TitleWrapper.props";
 import "./TitleWrapper.css";
 

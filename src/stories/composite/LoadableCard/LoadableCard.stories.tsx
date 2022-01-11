@@ -1,7 +1,5 @@
-import React from "react";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
 import { Image } from "antd";
-
 import LoadableCard from "../../../components/composite/LoadableCard";
 
 export default {

@@ -1,7 +1,5 @@
-import React from "react";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
 import { BellOutlined } from "@ant-design/icons";
-
 import Header from "../../../components/layout/Header";
 
 export default {
